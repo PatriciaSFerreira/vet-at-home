@@ -1,4 +1,30 @@
 <resources>
     <string name="app_name">vet-at-home</string>
     <string name="registar">Registar</string>
+    <string name="title_activity_marcar_consulta">MarcarConsultaActivity</string>
+    <string name="title_activity_consultas_marcadas">ConsultasMarcadasActivity</string>
+    <string name="title_home">Página Inicial</string>
+    <string name="title_consulta">Marcar Consulta</string>
+    <string name="title_adicionar_animal">Adicionar Animal</string>
+    <string name="title_perfil">Seu Perfil</string>
+
+    <string-array name="Opções">
+        <item>Mani</item>
+        <item>Kiko</item>
+        <item>Benny</item>
+        <item>Negritos</item>
+    </string-array>
+
+    <string-array name="OpçõesLocalidades">
+        <item>Coimbra</item>
+        <item>Lisboa</item>
+        <item>Porto</item>
+    </string-array>
+
+    <string-array name="OpçõesMedicos">
+        <item>Dr. João</item>
+        <item>Dra. Joana</item>
+        <item>Dra. Maria</item>
+        <item>Dr. Manuel</item>
+    </string-array>
 </resources>
