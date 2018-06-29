@@ -1,19 +1,30 @@
 package pt.iscac.pdi.vet_at_home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class MarcarConsultaActivity extends AppCompatActivity {
+import pt.iscac.pdi.vet_at_home.pedidos.GetLocalidadesTarefa;
+import pt.iscac.pdi.vet_at_home.pedidos.GetVeterinariosTarefa;
+import pt.iscac.pdi.vet_at_home.pedidos.MarcarConsultaTarefa;
 
-    Spinner opcoes, opcoesLocalidades, opcoesMedicos;
+public class MarcarConsultaActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    //private Spinner opcoes, opcoesLocalidades, opcoesMedicos;
+    private String valorOpcaoAnimal;
+    private String valorOpcaoLocalidade;
+    private String valorOpcaoMedico;
     private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -48,30 +59,79 @@ public class MarcarConsultaActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        opcoes=(Spinner)findViewById(R.id.spinnerOpcoes);
+        Spinner opcoes=(Spinner)findViewById(R.id.spinnerOpcoes);
+        opcoes.setOnItemSelectedListener(this);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.Opções, android.R.layout.simple_spinner_item);
         opcoes.setAdapter(adapter);
 
-        opcoesLocalidades=(Spinner)findViewById(R.id.spinnerLocalidades);
+        Spinner opcoesLocalidades=(Spinner)findViewById(R.id.spinnerLocalidades);
+        opcoesLocalidades.setOnItemSelectedListener(this);
 
         adapter = ArrayAdapter.createFromResource(this, R.array.OpçõesLocalidades, android.R.layout.simple_spinner_item);
         opcoesLocalidades.setAdapter(adapter);
 
-        opcoesMedicos=(Spinner)findViewById(R.id.spinnerMedicos);
+        Spinner opcoesMedicos=(Spinner)findViewById(R.id.spinnerMedicos);
+        opcoesMedicos.setOnItemSelectedListener(this);
 
         adapter = ArrayAdapter.createFromResource(this, R.array.OpçõesMedicos, android.R.layout.simple_spinner_item);
         opcoesMedicos.setAdapter(adapter);
 
+        new GetVeterinariosTarefa(this).execute();
     }
 
     public void marcarConsulta (View view){
         AlertDialog AlertDialog;
         AlertDialog = new AlertDialog.Builder(this).create();
-        AlertDialog.setTitle("Marcação de Consulta");
-        AlertDialog.setMessage("Consulta marcada com sucesso!");
-        AlertDialog.show();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
+        String userLogged = sharedPreferences.getString("username", "defaultValue");
+
+        CalendarView simpleCalendarView = (CalendarView) findViewById(R.id.calendarView);
+        long selectedDate = simpleCalendarView.getDate();
+
+        Log.v("msg", "a enviar mensagem");
+        new MarcarConsultaTarefa(valorOpcaoAnimal, valorOpcaoLocalidade, valorOpcaoMedico, userLogged, selectedDate, MarcarConsultaActivity.this).execute();
+        Log.v("msg", "mensagem enviada");
+
+//        AlertDialog.setTitle("Marcação de Consulta");
+//        AlertDialog.setMessage("Consulta marcada com sucesso!");
+//        AlertDialog.show();
     }
 
-    
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.spinnerOpcoes)
+        {
+            valorOpcaoAnimal = (String) parent.getItemAtPosition(position);
+            Log.v("valor animal: ", valorOpcaoAnimal);
+        }
+        else if (parent.getId() == R.id.spinnerLocalidades)
+        {
+            valorOpcaoLocalidade = (String) parent.getItemAtPosition(position);
+            Log.v("valor localidade: ", valorOpcaoLocalidade);
+        }
+        else if (parent.getId() == R.id.spinnerMedicos)
+        {
+            valorOpcaoMedico = (String) parent.getItemAtPosition(position);
+            Log.v("valor medico: ", valorOpcaoMedico);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (parent.getId() == R.id.spinnerOpcoes)
+        {
+            valorOpcaoAnimal = "";
+        }
+        else if (parent.getId() == R.id.spinnerLocalidades)
+        {
+            valorOpcaoLocalidade = "";
+        }
+        else if (parent.getId() == R.id.spinnerMedicos)
+        {
+            valorOpcaoMedico = "";
+        }
+    }
 }
