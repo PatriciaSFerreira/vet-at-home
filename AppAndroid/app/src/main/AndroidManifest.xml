@@ -21,8 +21,8 @@
             -->
         </activity>
         <activity
-            android:name=".MarcarConsultaActivity"
-            android:label="@string/title_activity_marcar_consulta">
+            android:name=".ConsultasMarcadasActivity"
+            android:label="@string/title_activity_consultas_marcadas">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

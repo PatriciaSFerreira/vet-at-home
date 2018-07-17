@@ -1,16 +1,15 @@
 package pt.iscac.pdi.vet_at_home.pedidos;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,39 +18,33 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscac.pdi.vet_at_home.R;
-import pt.iscac.pdi.vet_at_home.modelo.Veterinario;
-import pt.iscac.pdi.vet_at_home.modelo.Veterinarios;
+import pt.iscac.pdi.vet_at_home.modelo.Consulta;
+import pt.iscac.pdi.vet_at_home.modelo.Consultas;
 
-public class GetVeterinariosTarefa extends AsyncTask<String, String, String> {
+public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String> {
 
-    private static final String strURL = "http://patricia-pdi.atwebpages.com/Veterinario.php?localidadeId=1";
+    private static final String strURL = "http:///patricia-pdi.atwebpages.com/ConsultasMarcadas.php?userId=3";
+//    private String userId;
     private Context context;
     private String autStatus;
     //context: serve para passar classes
     //private ProgressDialog pDialog;
     private HttpURLConnection urlConnection;
 
-    public GetVeterinariosTarefa(Context context) {
+    public GetConsultasMarcadasTarefa(Context context, String userId) {
         this.context = context;
-//        this.pDialog = new ProgressDialog(context);
+  //      this.userId = userId;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-//        pDialog = new ProgressDialog(context);
-//        pDialog.setMessage("A marcar consulta...");
-//        pDialog.setIndeterminate(false);
-//        pDialog.setCancelable(true);
-//        pDialog.show();
     }
 
     /**
@@ -63,7 +56,9 @@ public class GetVeterinariosTarefa extends AsyncTask<String, String, String> {
 
         try {
             //URL url = new URL(params[0]);
-            URL url = new URL(strURL);
+            //String urlString = String.format("%s?userId=%s", strURL, this.userId);
+            String urlString = String.format("%s?userId=%s", strURL);
+            URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             urlConnection.setRequestProperty("Accept", "application/json");
@@ -102,33 +97,42 @@ public class GetVeterinariosTarefa extends AsyncTask<String, String, String> {
             Log.v("json array recebido: ", jsonObject.toString());
 
             Gson gson = new Gson();
-            // Converter string JSON em classe java.
-            Veterinarios veterinarios = gson.fromJson(jsonObject.toString(), Veterinarios.class);
 
-            //for (Veterinario vet : veterinarios.getVeterinarios()) {
-            for (Veterinario vet : veterinarios.getVeterinarios()) {
-                Log.v("veterinario recebido: ", vet.getId()+":"+vet.getNome());
+            // Converter string JSON em classe java.
+
+            Consultas consultas = gson.fromJson(jsonObject.toString(), Consultas.class);
+
+            for (Consulta cons :consultas.getConsultas()) {
+                Log.v("consulta recebida: ", cons.getIdAnimal()+":"+cons.getIdVet()+":"+cons.getDataHora());
             }
 
             // Inserir valores no spinner da activity.
             Activity activity = (Activity) context;
-            Spinner opcoesMedicos=(Spinner) activity.findViewById(R.id.spinnerMedicos);
 
-            List<String> nomeVeterinarios = new ArrayList<>();
-            for (Veterinario nomeVet : veterinarios.getVeterinarios())
+            // TODO: vai buscar linearLayout.
+
+            View linearLayout = (LinearLayout) activity.findViewById(R.id.info);
+
+            // Ciclo que percorre valores recebidos.
+                // TODO: Criar uma textView com a string "<nome-veterinario> <data> <nome-animal>".
+
+            for (Consulta c : consultas.getConsultas())
             {
-                nomeVeterinarios.add(nomeVet.getNome());
+                TextView textViewConsulta = new TextView(activity);
+                String Stringtexto = String.format("%s %s %s", c.getNomeAnimal(), c.getDataHora().toString(), c.getIdVet());
+                nomeAnimal.setText(texto);
             }
+            TextView nomeAnimal = new TextView(activity);
+            nomeAnimal.setText("");
 
-            // Creating adapter for spinner
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, nomeVeterinarios);
-            //ArrayAdapter<Veterinario> dataAdapter = new ArrayAdapter<Veterinario>(activity, android.R.layout.simple_spinner_item, veterinarios.getVeterinarios());
+//                TextView valueTV = new TextView(this);
+//                valueTV.setText("hallo hallo");
+//                valueTV.setId(5);
+//                valueTV.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 
-            // Drop down layout style - list view with radio button
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // attaching data adapter to spinner
-            opcoesMedicos.setAdapter(dataAdapter);
+                // TODO: Adicionar textView ao LinearLayout
+//                ((LinearLayout) linearLayout).addView(valueTV);
+            // FIM CICLO: "que percorre valores recebidos."
 
         } catch (JSONException e) {
             Log.v("ERRO: ", e.getMessage());

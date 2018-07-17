@@ -15,6 +15,7 @@ import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import pt.iscac.pdi.vet_at_home.pedidos.GetAnimaisTarefa;
 import pt.iscac.pdi.vet_at_home.pedidos.GetLocalidadesTarefa;
 import pt.iscac.pdi.vet_at_home.pedidos.GetVeterinariosTarefa;
 import pt.iscac.pdi.vet_at_home.pedidos.MarcarConsultaTarefa;
@@ -25,7 +26,7 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
     private String valorOpcaoAnimal;
     private String valorOpcaoLocalidade;
     private String valorOpcaoMedico;
-    private TextView mTextMessage;
+    //private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -34,16 +35,16 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    //mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_add:
-                    mTextMessage.setText(R.string.title_activity_marcar_consulta);
+                    //mTextMessage.setText(R.string.title_activity_marcar_consulta);
                     return true;
                 case R.id.navigation_pets:
-                    mTextMessage.setText(R.string.title_adicionar_animal);
+                    //mTextMessage.setText(R.string.title_adicionar_animal);
                     return true;
                 case R.id.navigation_face:
-                    mTextMessage.setText(R.string.title_perfil);
+                    //mTextMessage.setText(R.string.title_perfil);
                     return true;
             }
             return false;
@@ -55,7 +56,7 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marcar_consulta);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+       // mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -78,11 +79,13 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
         opcoesMedicos.setAdapter(adapter);
 
         new GetVeterinariosTarefa(this).execute();
+        new GetLocalidadesTarefa(this).execute();
+        new GetAnimaisTarefa(this).execute();
     }
 
     public void marcarConsulta (View view){
-        AlertDialog AlertDialog;
-        AlertDialog = new AlertDialog.Builder(this).create();
+        AlertDialog alertDialog;
+        alertDialog = new AlertDialog.Builder(this).create();
 
         SharedPreferences sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
         String userLogged = sharedPreferences.getString("username", "defaultValue");

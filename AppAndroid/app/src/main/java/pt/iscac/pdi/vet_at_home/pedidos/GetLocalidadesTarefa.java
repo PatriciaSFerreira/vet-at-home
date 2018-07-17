@@ -35,12 +35,12 @@ public class GetLocalidadesTarefa extends AsyncTask<String, String, String> {
         private Context context;
         private String autStatus;
         //context: serve para passar classes
-        private ProgressDialog pDialog;
+        // private ProgressDialog pDialog;
         private HttpURLConnection urlConnection;
 
         public GetLocalidadesTarefa(Context context) {
             this.context = context;
-            this.pDialog = new ProgressDialog(context);
+            // this.pDialog = new ProgressDialog(context);
         }
 
         @Override
@@ -139,12 +139,7 @@ public class GetLocalidadesTarefa extends AsyncTask<String, String, String> {
             }
 
             if (autStatus != null && autStatus.equals("0")) {
-                String text = "Erro na marcação. Volte a tentar.";
-                //Context context = getApplicationContext();
-                Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-                t.show();
-            } else {
-                String text = "Marcação efetuada com sucesso.";
+                String text = "Erro na rede.";
                 //Context context = getApplicationContext();
                 Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                 t.show();
