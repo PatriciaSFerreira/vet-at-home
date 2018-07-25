@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">vet-at-home</string>
+    <string name="title_activity_login">Login</string>
     <string name="registar">Registar</string>
     <string name="title_activity_marcar_consulta">Marcar Consulta</string>
-    <string name="title_activity_consultas_marcadas">ConsultasMarcadasActivity</string>
+    <string name="title_activity_consultas_marcadas">Consultas Marcadas</string>
     <string name="title_home">Página Inicial</string>
     <string name="title_consulta">Marcar Consulta</string>
     <string name="title_adicionar_animal">Adicionar Animal</string>

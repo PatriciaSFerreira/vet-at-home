@@ -17,14 +17,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
 
-    <LinearLayout
+    <ListView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:id="@+id/info"
+        android:id="@+id/listaConsultasMarcadas"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    </LinearLayout>
+    </ListView>
 
 
 </android.support.constraint.ConstraintLayout>

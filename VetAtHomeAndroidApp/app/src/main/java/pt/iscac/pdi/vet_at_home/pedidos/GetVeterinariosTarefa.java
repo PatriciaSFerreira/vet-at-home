@@ -32,15 +32,17 @@ import pt.iscac.pdi.vet_at_home.modelo.Veterinarios;
 
 public class GetVeterinariosTarefa extends AsyncTask<String, String, String> {
 
-    private static final String strURL = "http://patricia-pdi.atwebpages.com/Veterinario.php?localidadeId=1";
+    private static final String strURL = "http://patricia-pdi.atwebpages.com/Veterinario.php";
     private Context context;
+    private String localidadeId;
     private String autStatus;
     //context: serve para passar classes
     //private ProgressDialog pDialog;
     private HttpURLConnection urlConnection;
 
-    public GetVeterinariosTarefa(Context context) {
+    public GetVeterinariosTarefa(Context context, String localidadeId) {
         this.context = context;
+        this.localidadeId = localidadeId;
 //        this.pDialog = new ProgressDialog(context);
     }
 
@@ -62,8 +64,9 @@ public class GetVeterinariosTarefa extends AsyncTask<String, String, String> {
         StringBuilder result = new StringBuilder();
 
         try {
+            String finalUrlStr = String.format("%s?localidadeId=%s", strURL, this.localidadeId);
             //URL url = new URL(params[0]);
-            URL url = new URL(strURL);
+            URL url = new URL(finalUrlStr);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             urlConnection.setRequestProperty("Accept", "application/json");

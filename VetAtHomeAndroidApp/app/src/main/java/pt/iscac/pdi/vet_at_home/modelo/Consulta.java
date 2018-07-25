@@ -5,10 +5,10 @@ import java.util.Date;
 public class Consulta {
 
     private String idCliente;
-    private String idAnimal;
+    private String animal;
     private Date dataHora;
     private String idLocalidade;
-    private String idVet;
+    private String veterinario;
 
     public String getIdCliente() {
         return idCliente;
@@ -18,12 +18,12 @@ public class Consulta {
         this.idCliente = idCliente;
     }
 
-    public String getIdAnimal() {
-        return idAnimal;
+    public String getAnimal() {
+        return animal;
     }
 
-    public void setIdAnimal(String idAnimal) {
-        this.idAnimal = idAnimal;
+    public void setAnimal(String animal) {
+        this.animal = animal;
     }
 
     public Date getDataHora() {
@@ -42,12 +42,12 @@ public class Consulta {
         this.idLocalidade = idLocalidade;
     }
 
-    public String getIdVet() {
-        return idVet;
+    public String getVeterinario() {
+        return veterinario;
     }
 
-    public void setIdVet(String idVet) {
-        this.idVet = idVet;
+    public void setVeterinario(String veterinario) {
+        this.veterinario = veterinario;
     }
 
     @Override

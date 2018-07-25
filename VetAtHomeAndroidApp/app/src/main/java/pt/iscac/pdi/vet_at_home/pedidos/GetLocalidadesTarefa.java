@@ -31,7 +31,7 @@ import pt.iscac.pdi.vet_at_home.modelo.Localidades;
 
 public class GetLocalidadesTarefa extends AsyncTask<String, String, String> {
 
-        private static final String strURL = "http:///patricia-pdi.atwebpages.com/Localidade.php";
+        private static final String strURL = "http://patricia-pdi.atwebpages.com/Localidade.php";
         private Context context;
         private String autStatus;
         //context: serve para passar classes

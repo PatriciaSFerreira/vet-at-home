@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,26 +21,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import pt.iscac.pdi.vet_at_home.R;
+import pt.iscac.pdi.vet_at_home.adaptadores.ConsultaAdapter;
 import pt.iscac.pdi.vet_at_home.modelo.Consulta;
 import pt.iscac.pdi.vet_at_home.modelo.Consultas;
 
 public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String> {
 
-    private static final String strURL = "http:///patricia-pdi.atwebpages.com/ConsultasMarcadas.php?userId=3";
-//    private String userId;
+    private static final String strURL = "http://patricia-pdi.atwebpages.com/ConsultasMarcadas.php";
     private Context context;
     private String autStatus;
+    private String userId;
     //context: serve para passar classes
     //private ProgressDialog pDialog;
     private HttpURLConnection urlConnection;
 
     public GetConsultasMarcadasTarefa(Context context, String userId) {
         this.context = context;
-  //      this.userId = userId;
+        this.userId = userId;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String
         try {
             //URL url = new URL(params[0]);
             //String urlString = String.format("%s?userId=%s", strURL, this.userId);
-            String urlString = String.format("%s?userId=%s", strURL);
+            String urlString = String.format("%s?clienteId=%s", strURL, userId);
             URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -96,14 +96,14 @@ public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String
             JSONObject jsonObject = new JSONObject(result).getJSONObject("content");
             Log.v("json array recebido: ", jsonObject.toString());
 
-            Gson gson = new Gson();
-
             // Converter string JSON em classe java.
 
+            //Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
             Consultas consultas = gson.fromJson(jsonObject.toString(), Consultas.class);
 
-            for (Consulta cons :consultas.getConsultas()) {
-                Log.v("consulta recebida: ", cons.getIdAnimal()+":"+cons.getIdVet()+":"+cons.getDataHora());
+            for (Consulta cons : consultas.getConsultas()) {
+                Log.v("consulta recebida: ", cons.getAnimal()+":"+cons.getVeterinario()+":"+cons.getDataHora());
             }
 
             // Inserir valores no spinner da activity.
@@ -111,28 +111,26 @@ public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String
 
             // TODO: vai buscar linearLayout.
 
-            View linearLayout = (LinearLayout) activity.findViewById(R.id.info);
+            ListView listView = (ListView) activity.findViewById(R.id.listaConsultasMarcadas);
 
             // Ciclo que percorre valores recebidos.
                 // TODO: Criar uma textView com a string "<nome-veterinario> <data> <nome-animal>".
 
             for (Consulta c : consultas.getConsultas())
             {
-                TextView textViewConsulta = new TextView(activity);
-                String Stringtexto = String.format("%s %s %s", c.getNomeAnimal(), c.getDataHora().toString(), c.getIdVet());
-                nomeAnimal.setText(texto);
+                //TextView textViewConsulta = new TextView(activity);
+                String Stringtexto = String.format("%s %s %s", c.getAnimal(), c.getDataHora().toString(), c.getVeterinario());
+                //textViewConsulta.setText(Stringtexto);
+                Log.v("consulta", Stringtexto);
             }
-            TextView nomeAnimal = new TextView(activity);
-            nomeAnimal.setText("");
 
-//                TextView valueTV = new TextView(this);
-//                valueTV.setText("hallo hallo");
-//                valueTV.setId(5);
-//                valueTV.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+            ConsultaAdapter consultaAdapter;
+            consultaAdapter = new ConsultaAdapter(context, consultas.getConsultas());
+            listView.setAdapter(consultaAdapter);
+
 
                 // TODO: Adicionar textView ao LinearLayout
 //                ((LinearLayout) linearLayout).addView(valueTV);
-            // FIM CICLO: "que percorre valores recebidos."
 
         } catch (JSONException e) {
             Log.v("ERRO: ", e.getMessage());
@@ -141,7 +139,6 @@ public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String
 
         if (autStatus != null && autStatus.equals("0")) {
             String text = "Erro na rede.";
-            //Context context = getApplicationContext();
             Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
             t.show();
         }
