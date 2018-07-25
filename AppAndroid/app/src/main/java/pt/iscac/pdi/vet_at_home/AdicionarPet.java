@@ -1,5 +1,4 @@
 package pt.iscac.pdi.vet_at_home;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,32 +21,28 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+public class AdicionarPet extends AppCompatActivity {
 
-public class RegistarActivity extends AppCompatActivity {
-
-    public static EditText user1;
-    public static EditText email;
-    public static EditText pass1;
-    public static Button btn5;
+    public static EditText nome;
+    public static EditText raca;
+    public static EditText idade;
+    //public static Button foto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registar);
-
+        setContentView(R.layout.activity_adicionar_pet);
+    }
+    public void adicionar(View view) {
+        new AdicionarAnimal().execute();
     }
 
-    public void registar(View view) {
-        new RegistarUtilizador().execute();
-    }
-
-    //Esta classe vai chamar o servico web que permite a autenticacao
-    private class RegistarUtilizador extends AsyncTask<String, String, String> {
+    private class AdicionarAnimal extends AsyncTask<String, String, String> {
 
         String autStatus;
-        private String strURL = "http://maelis.atwebpages.com/Registar.php";
+        private String strURL = "http://maelis.atwebpages.com/AdicionarAnimal.php";
 
-        ProgressDialog pDialog = new ProgressDialog(RegistarActivity.this);
+        ProgressDialog pDialog = new ProgressDialog(AdicionarPet.this);
         HttpURLConnection urlConnection;
         SharedPreferences sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
         String userLogged = sharedPreferences.getString("username", "defaultValue");
@@ -55,8 +50,8 @@ public class RegistarActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(RegistarActivity.this);
-            pDialog.setMessage("A registar utilizador ...");
+            pDialog = new ProgressDialog(AdicionarPet.this);
+            pDialog.setMessage("A adicionar animal...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -67,13 +62,13 @@ public class RegistarActivity extends AppCompatActivity {
          */
         protected String doInBackground(String... params) {
 
-            user1 = (EditText) findViewById(R.id.register_username);
-            email = (EditText) findViewById(R.id.register_email);
-            pass1 = (EditText) findViewById(R.id.register_password);
-            btn5 = (Button) findViewById(R.id.btnregistar);
+            nome = (EditText) findViewById(R.id.nome);
+            idade = (EditText) findViewById(R.id.idade);
+            raca = (EditText) findViewById(R.id.raca);
+            //btn5 = (Button) findViewById(R.id.button4);
             StringBuilder result = new StringBuilder();
 
-            if (user1.getText().length() == 0 || email.getText().length() == 0 || pass1.getText().length() == 0) {
+            if (nome.getText().length() == 0 || idade.getText().length() == 0 || raca.getText().length() == 0) {
                 pDialog.dismiss();
                 autStatus = "2";
                 return "0";
@@ -83,9 +78,9 @@ public class RegistarActivity extends AppCompatActivity {
             try {
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("username", user1.getText().toString());
-                jsonObject.put("email", email.getText().toString());
-                jsonObject.put("password", pass1.getText().toString());
+                jsonObject.put("nome", nome.getText().toString());
+                jsonObject.put("raca", raca.getText().toString());
+                jsonObject.put("idade", idade.getText().toString());
 
                 Log.v("json_send:", jsonObject.toString());
 
@@ -131,7 +126,7 @@ public class RegistarActivity extends AppCompatActivity {
             pDialog.dismiss();
 
             if (autStatus.equals("0")) {
-                String text = "Erro no registo. Volte a tentar.";
+                String text = "Erro. Volte a tentar.";
                 Context context = getApplicationContext();
                 Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                 t.show();
@@ -141,11 +136,12 @@ public class RegistarActivity extends AppCompatActivity {
                 Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                 t.show();
             } else{
-                String text = "Registado com sucesso";
+                String text = "Animal adicionado com sucesso";
                 Context context = getApplicationContext();
                 Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                 t.show();
             }
         }
     }
+
 }

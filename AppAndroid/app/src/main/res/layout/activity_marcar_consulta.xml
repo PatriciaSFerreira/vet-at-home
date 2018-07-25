@@ -55,7 +55,7 @@
                 android:layout_marginTop="28dp"
                 android:text="Qual é o animal?"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/foto"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <Spinner
@@ -123,7 +123,7 @@
                 android:layout_marginStart="20dp"
                 android:text="Para que data pretende a consulta?"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/editText2"
+                app:layout_constraintTop_toBottomOf="@+id/nome"
                 tools:layout_editor_absoluteX="84dp" />
 
             <CalendarView

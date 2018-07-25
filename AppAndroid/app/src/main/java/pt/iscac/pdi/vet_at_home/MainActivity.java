@@ -2,17 +2,20 @@ package pt.iscac.pdi.vet_at_home;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONObject;
-
+import org.json.JSONException;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,10 +26,15 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    //public static Button buttonlogin;
+    //public static Button buttonregistar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
+
     }
 
     public void autenticar(View view) {
@@ -34,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
         new AutenticarUtilizador().execute();
     }
 
+    public void loginregistar(View view) {
+        Intent intent = new Intent(this, RegistarActivity.class);
+        startActivity(intent);
+    }
+    public void seuspets() {
+        Intent intent = new Intent(this, SeusPets.class);
+        startActivity(intent);
+    }
     //Esta classe vai chamar o servico web que permite a autenticacao
     private class AutenticarUtilizador extends AsyncTask<String, String, String> {
 
@@ -68,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.v("json_send:", jsonObject.toString());
 
-                //URL url = new URL(params[0]);
                 URL url = new URL(strURL);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
@@ -90,33 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.v("json_received:", result.toString());
 
-                jsonObject = new JSONObject(result.toString());
-
-                String autStatus = jsonObject.getString("status");
-                String autContent = jsonObject.getString("content");
-
-                if (autStatus.equals("0")) {
-                    Log.v("aut_error:", autStatus);
-
-                    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("loggedin", "false");
-                    editor.putString("username", "none");
-                    editor.commit();
-
-                } else {
-                    Log.v("aut_success:", autStatus);
-
-                    //Criacao de duas variaveis par controlo da sessao do utilizador
-                    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("loggedin", "true");
-                    editor.putString("username", autContent);
-                    editor.commit();
-
-                    Log.v("aut_username:", sharedPreferences.getString("username", "defaultValue"));
-
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -126,35 +114,53 @@ public class MainActivity extends AppCompatActivity {
             return result.toString();
         }
 
-
         /**
          * After completing background task Dismiss the progress dialog
          **/
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String result) {
             // dismiss the dialog once product uupdated
             pDialog.dismiss();
+            try {
+                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                JSONObject jsonObject = new JSONObject(result);
+                if (jsonObject.getString("status").equals("0")) {
+                    sharedPreferences.edit().putString("loggedIn", "false");
+                    String text = "Erro na autenticacao. Volte a tentar.";
+                    Context context = getApplicationContext();
+                    Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    t.show();
+                } else {
+                    JSONObject userInfo = jsonObject.getJSONObject("content");
+                    sharedPreferences.edit().putString("loggedIn", "true");
+                    sharedPreferences.edit().putString("id", userInfo.getString("ID"));
+                    sharedPreferences.edit().putString("username", userInfo.getString("Username"));// usar o username em caso de querer aceder noutra ativ
+                    String text = "Login efetuado com sucesso";
+                    Context context = getApplicationContext();
+                    Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    t.show();
+                    seuspets();
 
-            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                    /*findViewById(R.id.imageView).setVisibility(View.GONE);
+                    findViewById(R.id.editText).setVisibility(View.GONE);
+                    findViewById(R.id.editText4).setVisibility(View.GONE);
+                    findViewById(R.id.textView).setVisibility(View.GONE);
+                    findViewById(R.id.textView3).setVisibility(View.GONE);
+                    findViewById(R.id.login_login_btn).setVisibility(View.GONE);
+                    findViewById(R.id.login_registar).setVisibility(View.GONE);
+                    findViewById(R.id.textView5).setVisibility(View.VISIBLE);
+                    findViewById(R.id.button4).setVisibility(View.VISIBLE);*/
 
-            Log.v("aut_username:", sharedPreferences.getString("username", "defaultValue"));
-
-            if (sharedPreferences.getString("loggedin", "false").equals("true"))
-            {
-                findViewById(R.id.imageView).setVisibility(View.GONE);
-                findViewById(R.id.editText).setVisibility(View.GONE);
-                findViewById(R.id.editText4).setVisibility(View.GONE);
-                findViewById(R.id.textView).setVisibility(View.GONE);
-                findViewById(R.id.textView3).setVisibility(View.GONE);
-                findViewById(R.id.button2).setVisibility(View.GONE);
-                findViewById(R.id.textView4).setVisibility(View.GONE);
-                findViewById(R.id.textView5).setVisibility(View.VISIBLE);
-                findViewById(R.id.button4).setVisibility(View.VISIBLE);
-            } else {
-                String text = "Erro na autenticacao. Volte a tentar.";
-                Context context = getApplicationContext();
-                Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-                t.show();
-            }
+                }
+            } catch (JSONException e){
+                e.printStackTrace();
         }
     }
+}
+
+
+    /*public void voltar(View view){
+        Log.v("accao","Voltar ao ecra anterior.");
+        Intent intent = new Intent(this, SeusPets.class);
+        startActivity(intent);
+    }*/
 }
