@@ -1,11 +1,8 @@
 package pt.iscac.pdi.vet_at_home.pedidos;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.CalendarView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -20,8 +17,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class MarcarConsultaTarefa extends AsyncTask<String, String, String> {
 
     private String valorOpcaoAnimal;
@@ -32,13 +27,16 @@ public class MarcarConsultaTarefa extends AsyncTask<String, String, String> {
 
     String autStatus;
     private String strURL = "http://patricia-pdi.atwebpages.com/Consulta.php";
+    private String userId;
 
     public MarcarConsultaTarefa(String valorOpcaoAnimal, String valorOpcaoLocalidade,
-                                String valorOpcaoMedico, String userLogged, long selectedDate, Context context) {
+                                String valorOpcaoMedico, String userLogged, long selectedDate,
+                                String userId, Context context) {
         this.valorOpcaoAnimal = valorOpcaoAnimal;
         this.valorOpcaoLocalidade = valorOpcaoLocalidade;
         this.valorOpcaoMedico = valorOpcaoMedico;
         this.selectedDate = selectedDate;
+        this.userId = userId;
         this.context = context;
 
     }
@@ -71,7 +69,8 @@ public class MarcarConsultaTarefa extends AsyncTask<String, String, String> {
             String dataSeleccionadaStr = formatadorData.format(dataSeleccionada);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("clienteId", 3);
+
+            jsonObject.put("clienteId", this.userId);
             jsonObject.put("animalId", valorOpcaoAnimal);
             jsonObject.put("dataHora", dataSeleccionadaStr);
             jsonObject.put("localidadeId", valorOpcaoLocalidade);

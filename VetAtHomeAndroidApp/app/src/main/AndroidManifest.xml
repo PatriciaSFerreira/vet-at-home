@@ -25,11 +25,6 @@
         <activity
             android:name=".MarcarConsultaActivity"
             android:label="@string/title_activity_marcar_consulta">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".ConsultasMarcadasActivity" />
@@ -39,6 +34,8 @@
         </activity>
 
         <activity android:name=".SeusPets"></activity>
+
+        <activity android:name=".AdicionarPet"></activity>
 
         <!--
         <activity

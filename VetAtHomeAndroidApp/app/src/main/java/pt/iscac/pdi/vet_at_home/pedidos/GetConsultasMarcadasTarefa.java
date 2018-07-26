@@ -102,35 +102,34 @@ public class GetConsultasMarcadasTarefa extends AsyncTask<String, String, String
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
             Consultas consultas = gson.fromJson(jsonObject.toString(), Consultas.class);
 
-            for (Consulta cons : consultas.getConsultas()) {
-                Log.v("consulta recebida: ", cons.getAnimal()+":"+cons.getVeterinario()+":"+cons.getDataHora());
-            }
+            if (consultas != null
+                    && consultas.getConsultas() != null
+                    && !consultas.getConsultas().isEmpty()) {
+                for (Consulta cons : consultas.getConsultas()) {
+                    Log.v("consulta recebida: ", cons.getAnimal() + ":" + cons.getVeterinario() + ":" + cons.getDataHora());
+                }
 
-            // Inserir valores no spinner da activity.
-            Activity activity = (Activity) context;
+                // Inserir valores no spinner da activity.
+                Activity activity = (Activity) context;
 
-            // TODO: vai buscar linearLayout.
+                // TODO: vai buscar linearLayout.
 
-            ListView listView = (ListView) activity.findViewById(R.id.listaConsultasMarcadas);
+                ListView listView = (ListView) activity.findViewById(R.id.listaConsultasMarcadas);
 
-            // Ciclo que percorre valores recebidos.
+                // Ciclo que percorre valores recebidos.
                 // TODO: Criar uma textView com a string "<nome-veterinario> <data> <nome-animal>".
 
-            for (Consulta c : consultas.getConsultas())
-            {
-                //TextView textViewConsulta = new TextView(activity);
-                String Stringtexto = String.format("%s %s %s", c.getAnimal(), c.getDataHora().toString(), c.getVeterinario());
-                //textViewConsulta.setText(Stringtexto);
-                Log.v("consulta", Stringtexto);
+                for (Consulta c : consultas.getConsultas()) {
+                    //TextView textViewConsulta = new TextView(activity);
+                    String Stringtexto = String.format("%s %s %s", c.getAnimal(), c.getDataHora().toString(), c.getVeterinario());
+                    //textViewConsulta.setText(Stringtexto);
+                    Log.v("consulta", Stringtexto);
+                }
+
+                ConsultaAdapter consultaAdapter;
+                consultaAdapter = new ConsultaAdapter(context, consultas.getConsultas());
+                listView.setAdapter(consultaAdapter);
             }
-
-            ConsultaAdapter consultaAdapter;
-            consultaAdapter = new ConsultaAdapter(context, consultas.getConsultas());
-            listView.setAdapter(consultaAdapter);
-
-
-                // TODO: Adicionar textView ao LinearLayout
-//                ((LinearLayout) linearLayout).addView(valueTV);
 
         } catch (JSONException e) {
             Log.v("ERRO: ", e.getMessage());

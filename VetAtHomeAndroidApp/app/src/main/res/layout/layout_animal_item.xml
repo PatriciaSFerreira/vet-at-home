@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/nome"
+        android:id="@+id/nomeAnimal"
         android:layout_width="151dp"
         android:layout_height="33dp"
         android:layout_marginBottom="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.062" />
 
     <TextView
-        android:id="@+id/idade"
+        android:id="@+id/idadeAnimal"
         android:layout_width="66dp"
         android:layout_height="24dp"
         android:layout_marginBottom="8dp"
@@ -39,7 +39,7 @@
         app:layout_constraintVertical_bias="0.178" />
 
     <TextView
-        android:id="@+id/raca"
+        android:id="@+id/racaAnimal"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginBottom="8dp"

@@ -64,14 +64,14 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
 
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        Intent intent2 = new Intent(MarcarConsultaActivity.this, ConsultasMarcadasActivity.class);
-                        startActivity(intent2);
+                        Intent intent1 = new Intent(MarcarConsultaActivity.this, ConsultasMarcadasActivity.class);
+                        startActivity(intent1);
                         break;
                     case R.id.navigation_add:
                         break;
                     case R.id.navigation_pets:
-                        //Intent intent3 = new Intent(MainActivity.this, ConsultasMarcadasActivity.class);
-                        //startActivity(intent3);
+                        Intent intent2 = new Intent(MarcarConsultaActivity.this, SeusPets.class);
+                        startActivity(intent2);
                         break;
                     case R.id.navigation_face:
                         //Intent intent4 = new Intent(MainActivity.this, ConsultasMarcadasActivity.class);
@@ -103,21 +103,24 @@ public class MarcarConsultaActivity extends AppCompatActivity implements Adapter
 
         new GetVeterinariosTarefa(this, "1").execute();
         new GetLocalidadesTarefa(this).execute();
-        new GetAnimaisTarefa(this, "3").execute();
+        SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "3");
+        new GetAnimaisTarefa(this, userId).execute();
     }
 
     public void marcarConsulta(View view) {
         AlertDialog alertDialog;
         alertDialog = new AlertDialog.Builder(this).create();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
         String userLogged = sharedPreferences.getString("username", "defaultValue");
+        String userId = sharedPreferences.getString("userId", "3");
 
         CalendarView simpleCalendarView = (CalendarView) findViewById(R.id.calendarView);
         long selectedDate = simpleCalendarView.getDate();
 
         Log.v("msg", "a enviar mensagem");
-        new MarcarConsultaTarefa(valorOpcaoAnimal, valorOpcaoLocalidade, valorOpcaoMedico, userLogged, selectedDate, MarcarConsultaActivity.this).execute();
+        new MarcarConsultaTarefa(valorOpcaoAnimal, valorOpcaoLocalidade, valorOpcaoMedico, userLogged, selectedDate, userId, MarcarConsultaActivity.this).execute();
         Log.v("msg", "mensagem enviada");
 
 //        AlertDialog.setTitle("Marcação de Consulta");

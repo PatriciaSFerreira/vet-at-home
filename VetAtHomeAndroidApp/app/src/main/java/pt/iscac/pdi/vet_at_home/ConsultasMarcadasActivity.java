@@ -1,20 +1,14 @@
 package pt.iscac.pdi.vet_at_home;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import pt.iscac.pdi.vet_at_home.modelo.Consulta;
 import pt.iscac.pdi.vet_at_home.pedidos.GetConsultasMarcadasTarefa;
 
 /**
@@ -46,8 +40,8 @@ public class ConsultasMarcadasActivity extends AppCompatActivity {
                         startActivity(intent1);
                         break;
                     case R.id.navigation_pets:
-                        //Intent intent3 = new Intent(MainActivity.this, ConsultasMarcadasActivity.class);
-                        //startActivity(intent3);
+                        Intent intent2 = new Intent(ConsultasMarcadasActivity.this, SeusPets.class);
+                        startActivity(intent2);
                         break;
                     case R.id.navigation_face:
                         //Intent intent4 = new Intent(MainActivity.this, ConsultasMarcadasActivity.class);
@@ -58,7 +52,9 @@ public class ConsultasMarcadasActivity extends AppCompatActivity {
             }
         });
 
-        new GetConsultasMarcadasTarefa(this, "3").execute();
+        SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "3");
+        new GetConsultasMarcadasTarefa(this, userId).execute();
 
     }
 }

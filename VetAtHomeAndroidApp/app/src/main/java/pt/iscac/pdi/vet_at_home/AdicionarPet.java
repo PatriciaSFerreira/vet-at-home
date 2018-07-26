@@ -76,11 +76,14 @@ public class AdicionarPet extends AppCompatActivity {
 
 
             try {
+                SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+                String userId = sharedPreferences.getString("userId", "3");
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("nome", nome.getText().toString());
                 jsonObject.put("raca", raca.getText().toString());
                 jsonObject.put("idade", idade.getText().toString());
+                jsonObject.put("userId", userId);
 
                 Log.v("json_send:", jsonObject.toString());
 

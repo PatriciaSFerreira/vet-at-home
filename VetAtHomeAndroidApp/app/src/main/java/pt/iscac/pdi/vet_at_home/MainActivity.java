@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void seuspets() {
-        Intent intent = new Intent(this, SeusPets.class);
+        Intent intent = new Intent(this, ConsultasMarcadasActivity.class);
         startActivity(intent);
     }
     //Esta classe vai chamar o servico web que permite a autenticacao
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             // dismiss the dialog once product uupdated
             pDialog.dismiss();
             try {
-                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
                 JSONObject jsonObject = new JSONObject(result);
                 if (jsonObject.getString("status").equals("0")) {
                     sharedPreferences.edit().putString("loggedIn", "false");
@@ -131,13 +131,20 @@ public class MainActivity extends AppCompatActivity {
                     t.show();
                 } else {
                     JSONObject userInfo = jsonObject.getJSONObject("content");
-                    sharedPreferences.edit().putString("loggedIn", "true");
-                    sharedPreferences.edit().putString("id", userInfo.getString("ID"));
-                    sharedPreferences.edit().putString("username", userInfo.getString("Username"));// usar o username em caso de querer aceder noutra ativ
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("loggedIn", "true");
+                    editor.putString("userId", userInfo.getString("ID"));
+                    editor.putString("username", userInfo.getString("Username"));// usar o username em caso de querer aceder noutra ativ
+                    editor.apply();
+
+                    String userId = sharedPreferences.getString("userId", "3");
                     String text = "Login efetuado com sucesso";
+
                     Context context = getApplicationContext();
                     Toast t = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                     t.show();
+
                     seuspets();
 
                     /*findViewById(R.id.imageView).setVisibility(View.GONE);

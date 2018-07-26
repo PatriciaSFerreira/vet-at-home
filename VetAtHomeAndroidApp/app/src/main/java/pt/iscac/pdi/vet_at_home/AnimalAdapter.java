@@ -51,9 +51,9 @@ public class AnimalAdapter extends BaseAdapter {
             if (vi == null)
                 vi = inflater.inflate(R.layout.layout_animal_item, null);
             //ImageView foto = (ImageView) vi.findViewById(R.id.foto);
-            TextView textNome = (TextView) vi.findViewById(R.id.nome);
-            TextView textRaca = (TextView) vi.findViewById(R.id.raca);
-            TextView textIdade = (TextView) vi.findViewById(R.id.idade);
+            TextView textNome = (TextView) vi.findViewById(R.id.nomeAnimal);
+            TextView textRaca = (TextView) vi.findViewById(R.id.racaAnimal);
+            TextView textIdade = (TextView) vi.findViewById(R.id.idadeAnimal);
             //Caso queira editar perfil do animal
             //Button btn8 = (Button) vi.findViewById(R.id.button8);
             //btn8.setFocusable(false);
@@ -66,9 +66,11 @@ public class AnimalAdapter extends BaseAdapter {
 
             //new DownloadImageTask((ImageView) vi.findViewById(R.id.imageView)).execute(strURL);
 
-            textNome.setText(((Animal)getItem(position)).getNome());
-            textRaca.setText(((Animal)getItem(position)).getRaca());
-            textIdade.setText(((Animal)getItem(position)).getIdade());
+            Animal animal = (Animal)getItem(position);
+
+            textNome.setText(animal.getNome());
+            textRaca.setText(animal.getRaca());
+            textIdade.setText( String.valueOf(animal.getIdade()) );
 
             vi.setTag(((Animal)getItem(position)));
             return vi;
